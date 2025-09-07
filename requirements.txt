@@ -1,0 +1,33 @@
+# Core
+pandas
+numpy
+scikit-learn
+scipy
+
+# Visualization
+matplotlib
+seaborn
+plotly
+
+# Forecasting
+statsmodels
+prophet
+
+# Notebooks
+jupyter
+ipykernel
+
+# Dashboard
+streamlit
+dash
+
+# Data handling
+openpyxl
+pyarrow
+
+# Utils
+tqdm
+joblib
+
+# Optional but useful
+python-dateutil
