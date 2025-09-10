@@ -114,3 +114,14 @@ for name, model in models.items():
     print("Classification Report:\n", classification_report(y_test, y_pred))
 
 print("\n✅ Done. Results summary:", results)
+
+import joblib
+
+# After training best model (say XGBoost pipeline)
+best_model = Pipeline([("pre", preprocessor), ("clf", XGBClassifier(eval_metric="mlogloss", random_state=42))])
+best_model.fit(X_train, y_train)
+
+# Save model
+joblib.dump(best_model, "/Users/sakshizanjad/Desktop/grocery_expiry_project/models/expiry_model.pkl")
+print("✅ Model saved at models/expiry_model.pkl")
+
