@@ -1,9 +1,9 @@
 # src/risk_scoring.py
 """
-Risk Scoring Module (Updated)
------------------------------
+Risk Scoring Module (3 Categories)
+----------------------------------
 - Flags expired products separately
-- Assigns High/Medium/Low risk for non-expired items
+- Assigns High (overstock) or Low (understock) risk for non-expired items
 - Saves results to data/external/risk_scores.csv
 """
 
@@ -34,17 +34,16 @@ latest_forecast.rename(columns={"yhat": "Forecasted_Demand"}, inplace=True)
 df = df.merge(latest_forecast, on="Product_Name", how="left")
 
 # -------------------------
-# Risk scoring
+# Risk scoring (3 categories)
 # -------------------------
 def assign_risk(row):
-    # Flag expired first
+    # Expired first
     if row["Expiry_Class"] == "Expired":
         return "Expired"
-    # Non-expired logic
+    # Overstock → forecast < stock
     elif row["Forecasted_Demand"] < row["Stock_Quantity"]:
         return "High"
-    elif abs(row["Forecasted_Demand"] - row["Stock_Quantity"]) <= row["Stock_Quantity"] * 0.2:
-        return "Medium"
+    # Understock → forecast >= stock
     else:
         return "Low"
 
