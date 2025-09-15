@@ -1,23 +1,64 @@
-# Pseudocode inside recommendations.py
+"""
+Recommendation Engine (Orchestrator)
+------------------------------------
+- Loads risk_scores.csv
+- Bootstraps labels (Dispose, Discount, Bundle, Relocate, Monitor)
+- Trains classifier & regressor
+- Saves final recommendations
+"""
 
-# Step 1: Load data
-data = pd.read_csv("/Users/sakshizanjad/Desktop/grocery_expiry_project/data/external/risk_scores.csv")
+import os
+import pandas as pd
+from .bootstrap_labels import add_bootstrap_labels
+from .features import prepare_features
+from .train_classifier import train_classifier
+from .train_regressor import train_regressor
 
-# Step 2: Train/Test split for regression (discount %)
-train_regressor(X, y_discount)
+# -------------------------
+# Paths
+# -------------------------
+RISK_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/external/risk_scores.csv"
+OUTPUT_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/external/recommendations.csv"
+os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
 
-# Step 3: Train/Test split for classification (actions)
-train_classifier(X, y_action)
+# -------------------------
+# Load data
+# -------------------------
+df = pd.read_csv(RISK_PATH, parse_dates=["Date_Received", "Last_Order_Date", "Expiration_Date"])
 
-# Step 4: Hybrid Recommendation Function
-def generate_recommendation(row, reg_model, clf_model):
-    if row["Risk_Level"] == "Expired":
-        return {"Action": "Dispose", "Discount": 0}
-    
-    # Predict discount %
-    discount = reg_model.predict(row[features])
-    
-    # Predict action
-    action = clf_model.predict(row[features])
-    
-    return {"Action": action, "Discount": discount}
+# -------------------------
+# Bootstrap labels
+# -------------------------
+df = add_bootstrap_labels(df)
+
+# -------------------------
+# Prepare features
+# -------------------------
+X, feature_cols = prepare_features(df)
+y_action = df["Action"]
+
+# -------------------------
+# Train classifier
+# -------------------------
+clf, le = train_classifier(X, y_action)
+df["Predicted_Action"] = le.inverse_transform(clf.predict(X))
+
+# -------------------------
+# Train regressor (only if discount)
+# -------------------------
+df = train_regressor(df, feature_cols)
+
+# -------------------------
+# Save recommendations
+# -------------------------
+output_cols = [
+    "Product_ID", "Product_Name", "Category", "Supplier_Name",
+    "Stock_Quantity", "Risk_Level", "Predicted_Action", "Predicted_Discount_Percent"
+]
+df[output_cols].to_csv(OUTPUT_PATH, index=False)
+
+print(f"✅ Recommendations complete. Results saved → {OUTPUT_PATH}")
+
+# Summary
+print("\nAction Distribution:")
+print(df["Predicted_Action"].value_counts())
