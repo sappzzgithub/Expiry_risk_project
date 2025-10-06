@@ -64,7 +64,8 @@ if __name__ == "__main__":
     # If still used directly for debugging
     try:
         sample_df = pd.read_csv(
-            "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
+#           "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
+            "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/processed_data.csv"
         )
         preds = predict_expiry_class(sample_df)
         print("Sample Predictions:", preds[:10])

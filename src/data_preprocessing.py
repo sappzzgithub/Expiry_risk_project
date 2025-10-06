@@ -5,8 +5,10 @@ import numpy as np
 import os
 
 def main():
-    RAW_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/intermediate.csv"
-    PROCESSED_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
+    #RAW_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/intermediate.csv"
+    RAW_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/intermediate.csv"
+    #PROCESSED_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
+    PROCESSED_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/processed_data.csv"
 
     df = pd.read_csv(RAW_PATH)
 
