@@ -1,97 +1,62 @@
-# src/data_preprocessing.py
-"""
-Data Preprocessing Script
--------------------------
-This script preprocesses the grocery inventory dataset:
-1. Cleans datatypes
-2. Removes duplicates
-3. Adds feature engineering columns
-4. Saves processed data
-"""
+#src/data_preprocessing.py
 
 import pandas as pd
 import numpy as np
 import os
 
-# -------------------------
-# Paths
-# -------------------------
-RAW_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/intermediate.csv"
-PROCESSED_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/processed_data.csv"
+def main():
+    RAW_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/intermediate.csv"
+    PROCESSED_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
 
-# -------------------------
-# Load data
-# -------------------------
-df = pd.read_csv(RAW_PATH)
+    df = pd.read_csv(RAW_PATH)
 
-# -------------------------
-# Ensure Correct Datatypes
-# -------------------------
-# Clean and convert Unit_Price to float
-if "Unit_Price" in df.columns:
-    df["Unit_Price"] = (
-        df["Unit_Price"]
-        .astype(str)
-        .str.replace(r"[\$,]", "", regex=True)
-        .astype(float)
-    )
+    if "Unit_Price" in df.columns:
+        df["Unit_Price"] = (
+            df["Unit_Price"]
+            .astype(str)
+            .str.replace(r"[\$,]", "", regex=True)
+            .astype(float)
+        )
 
-# Robust datetime conversion
-def robust_datetime_convert(series):
-    series = series.astype(str).str.strip().str.replace(r"[/]", "-", regex=True)
-    return pd.to_datetime(series, errors="coerce", infer_datetime_format=True)
+    def robust_datetime_convert(series):
+        series = series.astype(str).str.strip().str.replace(r"[/]", "-", regex=True)
+        return pd.to_datetime(series, errors="coerce")
 
-# Convert date columns individually
-if "Date_Received" in df.columns:
-    df["Date_Received"] = robust_datetime_convert(df["Date_Received"])
+    if "Date_Received" in df.columns:
+        df["Date_Received"] = robust_datetime_convert(df["Date_Received"])
+    if "Last_Order_Date" in df.columns:
+        df["Last_Order_Date"] = robust_datetime_convert(df["Last_Order_Date"])
+    if "Expiration_Date" in df.columns:
+        df["Expiration_Date"] = robust_datetime_convert(df["Expiration_Date"])
 
-if "Last_Order_Date" in df.columns:
-    df["Last_Order_Date"] = robust_datetime_convert(df["Last_Order_Date"])
+    df = df.drop_duplicates()
 
-if "Expiration_Date" in df.columns:
-    df["Expiration_Date"] = robust_datetime_convert(df["Expiration_Date"])
+    today = pd.to_datetime("today").normalize()
 
-# -------------------------
-# Remove duplicates
-# -------------------------
-df = df.drop_duplicates()
+    if "Expiration_Date" in df.columns:
+        df["Days_Until_Expiry"] = (df["Expiration_Date"] - today).dt.days
+    if "Date_Received" in df.columns:
+        df["Stock_Age"] = (today - df["Date_Received"]).dt.days
+    if "Stock_Quantity" in df.columns and "Unit_Price" in df.columns:
+        df["Stock_Value"] = df["Stock_Quantity"] * df["Unit_Price"]
+    if "Date_Received" in df.columns and "Expiration_Date" in df.columns:
+        df["Shelf_Life"] = (df["Expiration_Date"] - df["Date_Received"]).dt.days
+        df["Remaining_Shelf_Life_Ratio"] = (
+            df["Days_Until_Expiry"] / df["Shelf_Life"].replace(0, np.nan)
+        ).clip(0, 1)
 
-# -------------------------
-# Feature Engineering
-# -------------------------
-today = pd.to_datetime("today").normalize()
+    if "Expiry_Class" in df.columns:
+        df["Expiry_Class"] = df["Expiry_Class"].astype(str).str.strip()
+        df["Expiry_Class"] = pd.Categorical(
+            df["Expiry_Class"],
+            categories=["Expired", "Near_Expiry", "Not_Expired"]
+        )
 
-# Days until expiry
-if "Expiration_Date" in df.columns:
-    df["Days_Until_Expiry"] = (df["Expiration_Date"] - today).dt.days
+    os.makedirs(os.path.dirname(PROCESSED_PATH), exist_ok=True)
+    df.to_csv(PROCESSED_PATH, index=False)
 
-# Stock age
-if "Date_Received" in df.columns:
-    df["Stock_Age"] = (today - df["Date_Received"]).dt.days
+    print(f"✅ Preprocessing complete. Processed data saved at {PROCESSED_PATH}")
 
-# Stock value
-if "Stock_Quantity" in df.columns and "Unit_Price" in df.columns:
-    df["Stock_Value"] = df["Stock_Quantity"] * df["Unit_Price"]
-
-# Shelf life & remaining shelf life ratio
-if "Date_Received" in df.columns and "Expiration_Date" in df.columns:
-    df["Shelf_Life"] = (df["Expiration_Date"] - df["Date_Received"]).dt.days
-    df["Remaining_Shelf_Life_Ratio"] = (
-        df["Days_Until_Expiry"] / df["Shelf_Life"].replace(0, np.nan)
-    ).clip(0, 1)
-
-# Ensure Expiry_Class is categorical
-if "Expiry_Class" in df.columns:
-    df["Expiry_Class"] = df["Expiry_Class"].astype(str).str.strip()
-    df["Expiry_Class"] = pd.Categorical(
-        df["Expiry_Class"],
-        categories=["Expired", "Near_Expiry", "Not_Expired"]
-    )
-
-# -------------------------
-# Save processed data
-# -------------------------
-os.makedirs(os.path.dirname(PROCESSED_PATH), exist_ok=True)
-df.to_csv(PROCESSED_PATH, index=False)
-
-print(f"✅ Preprocessing complete. Processed data saved at {PROCESSED_PATH}")
+# Optional: allow standalone execution
+if __name__ == "__main__":
+    main()
