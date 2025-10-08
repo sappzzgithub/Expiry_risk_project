@@ -4,13 +4,10 @@ import pandas as pd
 import numpy as np
 import os
 
-def main():
-    #RAW_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/intermediate.csv"
-    RAW_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/intermediate.csv"
-    #PROCESSED_PATH = "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
-    PROCESSED_PATH = "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/processed_data.csv"
+def main(uploaded_file_path):
+    PROCESSED_PATH = "data/processed/processed_data.csv"
 
-    df = pd.read_csv(RAW_PATH)
+    df = pd.read_csv(uploaded_file_path)
 
     if "Unit_Price" in df.columns:
         df["Unit_Price"] = (
@@ -61,4 +58,4 @@ def main():
 
 # Optional: allow standalone execution
 if __name__ == "__main__":
-    main()
+    main("data/raw/merged_inventory.csv")
