@@ -2,6 +2,7 @@
 import sys
 import os
 
+
 # --- Add project root to Python path so 'src' can be imported ---
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -188,29 +189,28 @@ if uploaded_file:
             )
         )
 
-        # Line Chart: Stock Quantity Over Risk Levels
-        st.subheader("Stock Quantity Over Risk Levels")
-        stock_by_risk = rec_df.groupby("Risk_Level")["Stock_Quantity"].sum().reset_index()
-        st.plotly_chart(
-            px.line(
-                stock_by_risk,
-                x="Risk_Level",
-                y="Stock_Quantity",
-                title="Stock Quantity by Risk Level",
-                markers=True,
-                color_discrete_sequence=["#636EFA"]
-            )
-        )
-
     # --- Add KPI Cards ---
     st.markdown("""<h2 style='text-align: center;'>Key Metrics</h2>""", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Total Products", "1,000")
-    with col2:
-        st.metric("Expired Items", "50")
-    with col3:
-        st.metric("Near-Expiry Items", "200")
+
+    # Ensure Expiry_Class column exists
+    if "Expiry_Class" in uploaded_df.columns:
+        total_products = len(uploaded_df)
+
+        expired_count = (uploaded_df["Expiry_Class"] == "Expired").sum()
+        near_expiry_count = (uploaded_df["Expiry_Class"] == "Near_Expiry").sum()
+        not_expired_count = (uploaded_df["Expiry_Class"] == "Not_Expired").sum()
+
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("📦 Total Products", f"{total_products}")
+        with col2:
+            st.metric("❌ Expired Items", f"{expired_count}")
+        with col3:
+            st.metric("⚠️ Near-Expiry Items", f"{near_expiry_count}")
+        with col4:
+            st.metric("✅ Not Expired Items", f"{not_expired_count}")
+    else:
+        st.warning("⚠️ 'Expiry_Class' column not found in the uploaded data.")
 
     # --- Add Predictive Insights Section ---
     st.markdown("""<h2 style='text-align: center;'>Predictive Insights</h2>""", unsafe_allow_html=True)
@@ -222,34 +222,41 @@ if uploaded_file:
 
     # --- Add Forecasting Section ---
     st.markdown("""<h2 style='text-align: center;'>Forecasting & Trend Analysis</h2>""", unsafe_allow_html=True)
-    forecast_df = pd.read_csv("forecasts/product_level/all_products_forecast.csv")
 
-    # Debugging: Print column names to identify the issue
-    st.write("Forecast DataFrame Columns:", forecast_df.columns.tolist())
+    # Load forecast data
+    forecast_path = "forecasts/product_level/all_products_forecast.csv"
 
-    # Check if 'Date' column exists before setting it as index
-    if 'Date' in forecast_df.columns:
-        st.line_chart(forecast_df.set_index("Date"))
-    else:
-        st.error("The 'Date' column is missing in the forecast data. Please check the CSV file.")
+    try:
+        forecast_df = pd.read_csv(forecast_path)
 
-    # --- Add Risk Scoring Section ---
-    st.markdown("""<h2 style='text-align: center;'>Risk Scoring Insights</h2>""", unsafe_allow_html=True)
-    # Debugging: Print column names to identify the issue
-    st.write("Uploaded DataFrame Columns:", uploaded_df.columns.tolist())
+        # Rename Prophet-style columns for consistency
+        forecast_df.rename(columns={'ds': 'Date', 'yhat': 'Forecast'}, inplace=True)
 
-    # Check if 'Risk_Score' column exists before plotting
-    if 'Risk_Score' in uploaded_df.columns:
-        st.plotly_chart(px.box(uploaded_df, x="Category", y="Risk_Score", color="Risk_Level"))
-    else:
-        st.error("The 'Risk_Score' column is missing in the uploaded data. Please check the data or preprocessing pipeline.")
+        # Debugging: Show column names
+        st.write("Forecast DataFrame Columns (after renaming):", forecast_df.columns.tolist())
 
-    # --- Add Optimization Section ---
-    st.markdown("""<h2 style='text-align: center;'>Optimization & Recommendations</h2>""", unsafe_allow_html=True)
-    if "Predicted_Discount_Percent" in rec_df.columns:
-        st.dataframe(rec_df[["Product_Name", "Predicted_Action", "Predicted_Discount_Percent"]].head(10))
-    else:
-        st.dataframe(rec_df[["Product_Name", "Predicted_Action"]].head(10))
+        # Check if required columns exist
+        if 'Date' in forecast_df.columns and 'Forecast' in forecast_df.columns:
+            # Convert Date column to datetime (optional but good practice)
+            forecast_df['Date'] = pd.to_datetime(forecast_df['Date'], errors='coerce')
+
+            # Filter out rows with invalid dates
+            forecast_df = forecast_df.dropna(subset=['Date'])
+
+            # Plot forecast trend
+            st.line_chart(
+                forecast_df.set_index("Date")["Forecast"],
+                use_container_width=True
+            )
+        else:
+            st.error("The required columns ('Date', 'Forecast') are missing in the forecast data.")
+
+    except FileNotFoundError:
+        st.error(f"Forecast file not found at path: {forecast_path}")
+    except Exception as e:
+        st.error(f"An unexpected error occurred while loading forecast data: {e}")
+
+
 
     # --- Add Footer ---
     st.markdown("""<footer style='text-align: center;'>Version 1.0 | Last Updated: October 8, 2025</footer>""", unsafe_allow_html=True)
