@@ -29,7 +29,7 @@ The repository is organized following  layout:
 
 ```
 
-📦 Expiry\_risk\_project
+📦 Expiry_risk_project
 ├─ data/                       \# Stores all raw, interim, and final datasets
 │  ├─ raw/                     \# Original uploaded data (e.g., uploaded\_inventory.csv)
 │  ├─ processed/               \# Cleaned data ready for modeling
