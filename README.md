@@ -23,15 +23,22 @@ This project is an **Inventory Insights Dashboard** that predicts expiry risks, 
 
 ---
 
-## Installation
+## Create and activate a virtual enviroment :
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate  # Windows
+   source .venv/bin/activate  # Mac/Linux
+
+
 
 ### Prerequisites:
 - Python 3.8 or higher
 - Streamlit
 - Required Python libraries (listed in `requirements.txt`)
+- pip install -r requirements.txt (run this to build the dependencies required)
 
 ### Steps:
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/sappzzgithub/Expiry_risk_project>
+   cd Expiry_risk_project
