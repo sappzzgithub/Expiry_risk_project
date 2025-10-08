@@ -51,6 +51,9 @@ def predict_expiry_class(df: pd.DataFrame):
     X = df[selected_features]
     X = pd.get_dummies(X, drop_first=True)
 
+    # Handle missing values
+    X = X.fillna(0)  # Replace NaN values with 0 or use an appropriate imputation strategy
+
     # Align with training features
     model_features = model.feature_names_in_
     X = X.reindex(columns=model_features, fill_value=0)
@@ -63,10 +66,7 @@ def predict_expiry_class(df: pd.DataFrame):
 if __name__ == "__main__":
     # If still used directly for debugging
     try:
-        sample_df = pd.read_csv(
-#           "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
-            "/Users/sakshizanjad/Desktop/grocery_expiry_project/data/processed/processed_data.csv"
-        )
+        sample_df = pd.read_csv("data/processed/processed_data.csv")
         preds = predict_expiry_class(sample_df)
         print("Sample Predictions:", preds[:10])
     except Exception as e:
@@ -93,9 +93,7 @@ if __name__ == "__main__":
 #     import xgboost as xgb
 
 #     # Load processed data
-#     df = pd.read_csv(
-#         "C:/Users/T8665/OneDrive - LTIMindtree/Desktop/Expiry_risk_project/data/processed/processed_data.csv"
-#     )
+#     df = pd.read_csv("data/processed/processed_data.csv")
 
 #     selected_features = [
 #         "Category", "Shelf_Life", "Stock_Quantity", "Stock_Value",

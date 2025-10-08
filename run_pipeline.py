@@ -1,8 +1,9 @@
 # run_pipeline.py
 
 import sys
+import pandas as pd
 from src import data_preprocessing
-from src.expiry_prediction import predict_expiry_class
+from src.modelling import predict_expiry_class
 from src.forecasting import main as forecast_main
 from src.risk_scoring import main as risk_main
 from src.recommendations.recommend import run_recommendation_pipeline
@@ -12,7 +13,10 @@ def run_pipeline(uploaded_file_path):
     data_preprocessing.main(uploaded_file_path)
 
     print("\n🧠 Step 2: Predicting Expiry Class (using saved model)")
-    predict_expiry_class()  # Adds Expiry_Class to processed_data.csv
+    processed_data_path = "data/processed/processed_data.csv"
+    processed_df = pd.read_csv(processed_data_path)
+    processed_df["Expiry_Class"] = predict_expiry_class(processed_df)
+    processed_df.to_csv(processed_data_path, index=False)
 
     print("\n📈 Step 3: Forecasting (using saved / skip if exists)")
     try:
