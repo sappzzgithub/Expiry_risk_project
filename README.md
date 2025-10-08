@@ -9,17 +9,52 @@ This project presents an **Inventory Insights Dashboard** designed to combat gro
 
 ### Backend Pipeline
 The core engine for data processing and predictive analytics:
-- **Data Preprocessing**: Cleans, validates, and transforms raw inventory and sales data.
-- **Forecasting**: Predicts **future demand** and optimal **stock levels** to anticipate overstocking.
-- **Risk Scoring**: Calculates and assigns **risk levels** (e.g., High, Medium, Low) for individual inventory items based on stock vs. predicted demand and expiry dates.
-- **Recommendations**: Generates actionable inventory insights such as suggested **discounts**, **relocations** (e.g., front of store), or product **bundling** to mitigate identified risks.
+- **Data Preprocessing**: Cleans, validates, and transforms raw inventory and sales data (`src/data_preprocessing.py`).
+- **Forecasting**: Predicts **future demand** and optimal **stock levels** using time-series models, with results stored in `forecasts/`.
+- **Risk Scoring**: Calculates and assigns **risk levels** (e.g., High, Medium, Low) based on stock, predicted demand, and expiry dates (`src/risk_scoring.py`).
+- **Recommendations**: Generates actionable inventory insights such as suggested **discounts**, **relocations**, or product **bundling** to mitigate identified risks (`src/recommendations/`).
 
 ### Streamlit Dashboard
 An intuitive interface for monitoring and decision-making:
-- **Key Metrics**: Displays at-a-glance figures like **Total Products**, **Expired Items**, **Near-Expiry Items**, and the overall **Inventory Risk Percentage**.
-- **Visualizations**: Utilizes pie charts, bar charts, and line charts to visualize risk distributions, stock trends, and forecast vs. actual performance. Plots are interactive and **filterable** for deeper analysis.
-- **Recommendations Interface**: Presents the suggested actions, offering a feature to **download recommendations** as a CSV file for implementation.
+- **Key Metrics**: Displays at-a-glance figures like **Total Products**, **Expired Items**, **Near-Expiry Items**, and the overall **Inventory Risk Percentage** (`dashboard/app.py`).
+- **Visualizations**: Uses interactive charts (pie, bar, line) to visualize risk distributions and stock trends.
+- **Recommendations Interface**: Presents suggested actions, offering a feature to **download recommendations** as a CSV file.
 - **Interactive Filters**: Allows users to filter the entire dashboard by criteria like **risk levels** and **predicted actions**.
+
+---
+
+## Project Structure
+
+The repository is organized following  layout:
+
+```
+
+📦 Expiry\_risk\_project
+├─ data/                       \# Stores all raw, interim, and final datasets
+│  ├─ raw/                     \# Original uploaded data (e.g., uploaded\_inventory.csv)
+│  ├─ processed/               \# Cleaned data ready for modeling
+│  └─ external/                \# Final outputs (e.g., recommendations.csv, risk\_scores.csv)
+├─ forecasts/                  \# Stores detailed product-level demand forecasts
+│  └─ product\_level/           \# Individual CSVs for each product's forecast
+├─ models/                     \# Trained models and necessary artifacts
+│  ├─ best\_model.pkl           \# Final trained risk prediction model
+│  └─ label\_encoder.pkl
+├─ notebooks/                  \# Exploratory Data Analysis (EDA) and experimentation
+│  ├─ EDA.ipynb
+│  └─ AdvanceEDA.ipynb
+├─ src/                        \# Source code for the backend pipeline
+│  ├─ data\_preprocessing.py    \# Logic for cleaning and transforming data
+│  ├─ forecasting.py           \# Logic for time-series demand prediction
+│  ├─ risk\_scoring.py          \# Logic for calculating inventory risk
+│  ├─ modelling.py             \# Logic for training the risk prediction model
+│  └─ recommendations/         \# Module for generating mitigation actions
+├─ dashboard/                  \# Streamlit application files
+│  └─ app.py                   \# Main dashboard application
+├─ run\_pipeline.py             \# Script to run the entire data and prediction pipeline
+├─ requirements.txt            \# List of required Python dependencies
+└─ README.md                   \# Project overview and setup instructions (This file)
+
+````
 
 ---
 
@@ -28,7 +63,6 @@ An intuitive interface for monitoring and decision-making:
 ### Prerequisites
 Ensure you have the following installed on your system:
 - **Python 3.8** or higher.
-- **pip** (Python package installer).
 
 ### Step 1: Clone the Repository
 Open your terminal or command prompt and run:
@@ -64,10 +98,7 @@ pip install -r requirements.txt
 Execute the Streamlit application from the project root directory:
 
 ```bash
-streamlit run app.py  # Assuming your main dashboard file is named app.py
+streamlit run dashboard/app.py 
 ```
 
 The application will open in your web browser, typically at `http://localhost:8501`.
-
-```
-```
