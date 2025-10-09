@@ -1,4 +1,4 @@
-# 📊 Grocery Expiry Risk Prediction Project
+# 📊 Product Expiry Risk Prediction Project
 
 ## Overview
 This project presents an **Inventory Insights Dashboard** designed to combat grocery waste by predicting expiry risks, providing actionable recommendations, and visualizing key inventory trends. It integrates a robust backend pipeline—responsible for data preprocessing, demand forecasting, risk scoring, and recommendation generation—with an intuitive **Streamlit dashboard** for visualization and interaction.
@@ -30,29 +30,29 @@ The repository is organized following  layout:
 ```
 
 📦 Expiry_risk_project
-├─ data/                       \# Stores all raw, interim, and final datasets
-│  ├─ raw/                     \# Original uploaded data (e.g., uploaded\_inventory.csv)
-│  ├─ processed/               \# Cleaned data ready for modeling
-│  └─ external/                \# Final outputs (e.g., recommendations.csv, risk\_scores.csv)
-├─ forecasts/                  \# Stores detailed product-level demand forecasts
-│  └─ product\_level/           \# Individual CSVs for each product's forecast
-├─ models/                     \# Trained models and necessary artifacts
-│  ├─ best\_model.pkl           \# Final trained risk prediction model
-│  └─ label\_encoder.pkl
-├─ notebooks/                  \# Exploratory Data Analysis (EDA) and experimentation
+├─ data/                       # Stores all raw, interim, and final datasets
+│  ├─ raw/                     # Original uploaded data (e.g., uploaded_inventory.csv)
+│  ├─ processed/               # Cleaned data ready for modeling
+│  └─ external/                # Final outputs (e.g., recommendations.csv, risk_scoring.csv)
+├─ forecasts/                  # Stores detailed product-level demand forecasts
+│  └─ product_level/           # Individual CSVs for each product's forecast
+├─ models/                     # Trained models and necessary artifacts
+│  ├─ best_model.pkl           # Final trained risk prediction model
+│  └─ label_encoder.pkl
+├─ notebooks/                  # Exploratory Data Analysis (EDA) and experimentation
 │  ├─ EDA.ipynb
 │  └─ AdvanceEDA.ipynb
-├─ src/                        \# Source code for the backend pipeline
-│  ├─ data\_preprocessing.py    \# Logic for cleaning and transforming data
-│  ├─ forecasting.py           \# Logic for time-series demand prediction
-│  ├─ risk\_scoring.py          \# Logic for calculating inventory risk
-│  ├─ modelling.py             \# Logic for training the risk prediction model
-│  └─ recommendations/         \# Module for generating mitigation actions
-├─ dashboard/                  \# Streamlit application files
-│  └─ app.py                   \# Main dashboard application
-├─ run\_pipeline.py             \# Script to run the entire data and prediction pipeline
-├─ requirements.txt            \# List of required Python dependencies
-└─ README.md                   \# Project overview and setup instructions (This file)
+├─ src/                        # Source code for the backend pipeline
+│  ├─ data_preprocessing.py    # Logic for cleaning and transforming data
+│  ├─ forecasting.py           # Logic for time-series demand prediction
+│  ├─ risk_scoring.py          # Logic for calculating inventory risk
+│  ├─ modelling.py             # Logic for training the risk prediction model
+│  └─ recommendations/         # Module for generating mitigation actions
+├─ dashboard/                  # Streamlit application files
+│  └─ app.py                   # Main dashboard application
+├─ run_pipeline.py             # Script to run the entire data and prediction pipeline
+├─ requirements.txt            # List of required Python dependencies
+└─ README.md                   # Project overview and setup instructions (This file)
 
 ````
 
@@ -67,7 +67,7 @@ Ensure you have the following installed on your system:
 ### Step 1: Clone the Repository
 Open your terminal or command prompt and run:
 ```bash
-git clone [https://github.com/sappzzgithub/Expiry_risk_project](https://github.com/sappzzgithub/Expiry_risk_project)
+git clone https://github.com/sappzzgithub/Expiry_risk_project
 cd Expiry_risk_project
 ````
 
