@@ -25,34 +25,37 @@ An intuitive interface for monitoring and decision-making:
 
 ## Project Structure
 
-The repository is organized following  layout:
-
 ```
-
-📦 Expiry_risk_project
-├─ data/                       # Stores all raw, interim, and final datasets
-│  ├─ raw/                     # Original uploaded data (e.g., uploaded_inventory.csv)
-│  ├─ processed/               # Cleaned data ready for modeling
-│  └─ external/                # Final outputs (e.g., recommendations.csv, risk_scoring.csv)
-├─ forecasts/                  # Stores detailed product-level demand forecasts
-│  └─ product_level/           # Individual CSVs for each product's forecast
-├─ models/                     # Trained models and necessary artifacts
-│  ├─ best_model.pkl           # Final trained risk prediction model
-│  └─ label_encoder.pkl
-├─ notebooks/                  # Exploratory Data Analysis (EDA) and experimentation
-│  ├─ EDA.ipynb
-│  └─ AdvanceEDA.ipynb
-├─ src/                        # Source code for the backend pipeline
-│  ├─ data_preprocessing.py    # Logic for cleaning and transforming data
-│  ├─ forecasting.py           # Logic for time-series demand prediction
-│  ├─ risk_scoring.py          # Logic for calculating inventory risk
-│  ├─ modelling.py             # Logic for training the risk prediction model
-│  └─ recommendations/         # Module for generating mitigation actions
-├─ dashboard/                  # Streamlit application files
-│  └─ app.py                   # Main dashboard application
-├─ run_pipeline.py             # Script to run the entire data and prediction pipeline
-├─ requirements.txt            # List of required Python dependencies
-└─ README.md                   # Project overview and setup instructions (This file)
+Expiry_risk_project/
+├── data/                       # Stores all raw, interim, and final datasets 
+│   ├── raw/                    # Original uploaded data (e.g., uploaded_inventory.csv) 
+│   ├── processed/              # Cleaned data ready for modeling 
+│   └── external/               # Final outputs (e.g., recommendations.csv, risk_scoring.csv) 
+├── forecasts/                  # Stores detailed product-level demand forecasts 
+│   └── product_level/          # Individual CSVs for each product's forecast
+├── models/                     # Trained models and necessary artifacts 
+│   ├── best_model.pkl          # Final trained risk prediction model 
+│   └── label_encoder.pkl       # Label encoder for model preprocessing 
+├── notebooks/                  # Exploratory Data Analysis (EDA) and experimentation
+│   ├── EDA.ipynb               # Initial exploratory data analysis notebook
+│   └── AdvanceEDA.ipynb        # Advanced exploratory data analysis notebook 
+├── src/                        # Source code for the backend pipeline
+│   ├── data_preprocessing.py   # Logic for cleaning and transforming data 
+│   ├── forecasting.py          # Logic for time-series demand prediction 
+│   ├── risk_scoring.py         # Logic for calculating inventory risk
+│   ├── modelling.py            # Logic for training the risk prediction model 
+│   └── recommendations/        # Module for generating mitigation actions
+│       ├── __pycache__/        # Python compiled bytecode files 
+│       ├── bootstrap_labels.py # Logic for bootstrapping labels 
+│       ├── features.py         # Logic for feature engineering 
+│       ├── recommend.py        # Logic for generating recommendations 
+│       ├── train_classifier.py # Logic for training classifier model 
+│       └── train_regressor.py  # Logic for training regressor model 
+├── dashboard/                  # Streamlit application files
+│   └── app.py                  # Main dashboard application 
+├── run_pipeline.py             # Script to run the entire data and prediction pipeline 
+├── requirements.txt            # List of required Python dependencies
+└── README.md                   # Project overview and setup instructions 
 
 ````
 
