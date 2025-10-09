@@ -24,6 +24,12 @@ def main(preprocessed_csv_path="data/processed/processed_data.csv",
     # ✅ Load preprocessed inventory
     df = pd.read_csv(preprocessed_csv_path, parse_dates=["Date_Received", "Last_Order_Date", "Expiration_Date"])
 
+    # Validate required columns before parsing dates
+    required_columns = ["Date_Received", "Expiration_Date", "Last_Order_Date"]
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        raise ValueError(f"Missing required columns in preprocessed data: {', '.join(missing_columns)}")
+
     # ✅ Predict Expiry_Class if not present
     if "Expiry_Class" not in df.columns:
         print("⚡ Expiry_Class not found in data → Using saved model for prediction")

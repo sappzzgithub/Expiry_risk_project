@@ -9,6 +9,11 @@ def main(uploaded_file_path):
 
     df = pd.read_csv(uploaded_file_path)
 
+    # Debugging: Log column names and data at key steps
+    print("Columns in raw data:", df.columns.tolist())
+    print("Sample data:")
+    print(df.head())
+
     if "Unit_Price" in df.columns:
         df["Unit_Price"] = (
             df["Unit_Price"]
@@ -21,12 +26,15 @@ def main(uploaded_file_path):
         series = series.astype(str).str.strip().str.replace(r"[/]", "-", regex=True)
         return pd.to_datetime(series, errors="coerce")
 
-    if "Date_Received" in df.columns:
-        df["Date_Received"] = robust_datetime_convert(df["Date_Received"])
-    if "Last_Order_Date" in df.columns:
-        df["Last_Order_Date"] = robust_datetime_convert(df["Last_Order_Date"])
-    if "Expiration_Date" in df.columns:
-        df["Expiration_Date"] = robust_datetime_convert(df["Expiration_Date"])
+    # Ensure required columns exist in the raw data
+    required_columns = ["Date_Received", "Expiration_Date", "Last_Order_Date"]
+    missing_columns = [col for col in required_columns if col not in df.columns]
+    if missing_columns:
+        raise ValueError(f"Missing required columns in raw data: {', '.join(missing_columns)}")
+
+    # Convert date columns robustly
+    for col in required_columns:
+        df[col] = robust_datetime_convert(df[col])
 
     df = df.drop_duplicates()
 
