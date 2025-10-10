@@ -1,6 +1,7 @@
 # app.py
 import sys
 import os
+import base64
 
 
 # --- Add project root to Python path so 'src' can be imported ---
@@ -262,3 +263,41 @@ if uploaded_file:
     st.markdown("""<footer style='text-align: center;'>Version 1.0 | Last Updated: October 8, 2025</footer>""", unsafe_allow_html=True)
 else:
     st.info("Please upload a CSV file to get started.")
+
+# Add background image to the Streamlit dashboard
+
+def set_background_image(image_path):
+    with open(image_path, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(data:image/png;base64,{encoded_image});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+        }}
+        h1, h2, h3, h4, h5, h6, p, label {{
+            color: white !important;
+        }}
+        .stButton > button {{
+            background-color: #ffffff;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 16px;
+            cursor: pointer;
+        }}
+        .stButton > button:hover {{
+            background-color: #f1f1f1;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Set the background image
+set_background_image("F:/Zanjad-Project/Expiry_risk_project/dashboard/bg_image/background.png")
