@@ -19,7 +19,7 @@ from src.risk_scoring import main as risk_main
 
 # ----------------------- PAGE CONFIG -----------------------
 st.set_page_config(
-    page_title="Inventory Insights Dashboard",
+    page_title="Product expiry risk prediction & optimisation platform",
     layout="wide",
     page_icon="📊"
 )
