@@ -65,6 +65,17 @@ st.markdown("""
         color: #ffffff;
         text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
+
+    /* Fade-in animation */
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(10px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    .fade-container {
+        animation: fadeIn 0.7s ease-in-out;
+    }
+
     .glass-container {
         background: rgba(255, 255, 255, 0.08);
         border-radius: 20px;
@@ -73,6 +84,7 @@ st.markdown("""
         padding: 1.5rem;
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
+
     .nav-btn {
         background: linear-gradient(90deg, #007bff, #6610f2);
         color: white;
@@ -134,7 +146,7 @@ if uploaded_file:
     rec_file = "data/external/recommendations.csv"
     rec_df = pd.read_csv(rec_file) if os.path.exists(rec_file) else None
 
-    # ----------------------- NAVIGATION BUTTONS -----------------------
+    # ----------------------- NAVIGATION -----------------------
     st.markdown("<h3 style='text-align:center;'>Choose a Section</h3>", unsafe_allow_html=True)
     nav_cols = st.columns(5)
     sections = ["Overview", "Recommendations", "Filtered Insights", "Key Metrics", "Forecast Trends"]
@@ -149,9 +161,9 @@ if uploaded_file:
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ----------------------- MAIN CONTENT DISPLAY -----------------------
+    # ----------------------- MAIN CONTENT -----------------------
     with st.container():
-        st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
+        st.markdown("<div class='glass-container fade-container'>", unsafe_allow_html=True)
 
         # ---- 1️⃣ Overview ----
         if st.session_state.active_section == "Overview":
@@ -231,7 +243,7 @@ if uploaded_file:
         st.markdown("</div>", unsafe_allow_html=True)
 
     # ----------------------- FOOTER -----------------------
-    st.markdown("<footer>Inventory Insights Dashboard | Version 3.0 | © 2025</footer>", unsafe_allow_html=True)
+    st.markdown("<footer>Inventory Insights Dashboard | Version 3.1 | © 2025</footer>", unsafe_allow_html=True)
 
 else:
     st.info("📁 Please upload a CSV file to begin analysis.")
