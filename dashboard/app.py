@@ -49,7 +49,8 @@ def set_background_image(image_path):
     )
 
 
-set_background_image("F:/Zanjad-Project/Expiry_risk_project/dashboard/bg_image/background.png")
+set_background_image(os.path.join(os.path.dirname(__file__), "bg_image", "background.png"))
+
 
 
 # ----------------------- CUSTOM STYLING -----------------------
