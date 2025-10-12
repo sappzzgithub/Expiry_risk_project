@@ -119,7 +119,7 @@ st.markdown("""
 
 # ----------------------- HEADER -----------------------
 st.markdown("""
-    <h1 style="text-align:center;">📊 Inventory Insights Dashboard</h1>
+    <h1 style="text-align:center;">📊 Product Expiry Risk Prediction & Optimisation Platform</h1>
     <p style="text-align:center; color:#cccccc;">
     Explore inventory health, risks, forecasts, and AI-driven recommendations.
     </p>
